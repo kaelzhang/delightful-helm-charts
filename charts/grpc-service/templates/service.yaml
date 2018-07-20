@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  # Do not use fullname,
+  # so that the service could be accessed by using kube-dns
+  name: {{ template "grpc-service.name" . }}
+  labels:
+    app: {{ template "grpc-service.name" . }}
+    chart: {{ template "grpc-service.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ template "grpc-service.name" . }}
+    release: {{ .Release.Name }}

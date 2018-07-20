@@ -1,0 +1,73 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ template "grpc-service.fullname" . }}
+  labels:
+    app: {{ template "grpc-service.name" . }}
+    chart: {{ template "grpc-service.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "grpc-service.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "grpc-service.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+{{- $root := . -}}
+{{- if .Values.env }}
+          env:
+{{- range $env := .Values.env }}
+            - name: {{ $env.name }}
+{{- if $env.configMapKey }}
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "grpc-service.name" $root }}-configmap
+                  key: {{ $env.configMapKey }}
+{{- else if $env.secretKey }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "grpc-service.name" $root }}-secret
+                  key: {{ $env.secretKey }}
+{{- else }}
+              value: {{ $env.value }}
+{{- end -}}
+{{- end -}}
+{{- end }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

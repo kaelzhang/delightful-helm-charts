@@ -1,0 +1,63 @@
+# Default values for grpc-service.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# The service name, should be overridden by user
+# name: grpc-service
+
+replicaCount: 1
+
+image:
+  # repository: ost.ai/grpc-service
+  # tag: 1.2.1
+
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# env:
+#   - name: SERVICE_PORT
+#     # value will output a simple value
+#     value: "80"
+#   - name: MYSQL_PASSWORD
+#     # will reference the env value to the specific secret key
+#     secretKey: MYSQL_PASSWORD
+#   - name: MYSQL_HOST
+#     configMapKey: MYSQL_PASSWORD
+
+# secret:
+#   - name: MYSQL_PASSWORD
+#     value: 123456
+#   - name: WECHAT_PAY_CERT
+#     # this will load secret from file
+#     fromFile: /var/run/secrets/ost.ai/wechat_pay.p12
+
+# configmap:
+#   - name: CONFIG_NAME
+#     value: 123
+
+# secret:
+#   - name: MYSQL_PASSWORD
+#     value: 123456
+
+# configmap:
+#   - name: MYSQL_HOST
+#     value: 127.0.0.1
+#   - name: MYSQL_PORT
+#     value: 3306
+
+# env:
+#   - name: MYSQL_HOST
+#     configMapKey: MYSQL_HOST
+#   - name: MYSQL_PASSWORD
+#     secretKey: MYSQL_PASSWORD
+#   - name: REDIS_HOST
+#     value: 127.0.0.1

@@ -9,13 +9,12 @@ For details, see the README.md file of each chart.
 
 ## Usage
 
-Take member-service for example
-
+Take [member-service](charts/example/member-service.yaml) for example
 
 install:
 
 ```sh
-$ helm install ./member-service
+$ helm install --values ./charts/grpc-service/example/member-service.yaml ./charts/grpc-service
 ```
 
 list:
@@ -24,11 +23,11 @@ list:
 $ helm list
 
 NAME       	REVISION	STATUS  	CHART               	NAMESPACE
-elegant-hog	1       	DEPLOYED	member-service-0.1.0	default
+elegant-hog	1       	DEPLOYED	member-service-1.0.0	default
 ```
 
 upgrade
 
 ```sh
-$ helm upgrade elegant-hog ./member-service
+$ helm upgrade --values ./charts/grpc-service/example/member-service.yaml elegant-hog ./charts/grpc-service
 ```

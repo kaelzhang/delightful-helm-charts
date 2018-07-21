@@ -17,6 +17,9 @@ service:
   type: ClusterIP
   port: 80
 
+container:
+  port: 80
+
 nodeSelector: {}
 
 tolerations: []
@@ -31,7 +34,7 @@ affinity: {}
 #     # will reference the env value to the specific secret key
 #     secretKey: MYSQL_PASSWORD
 #   - name: MYSQL_HOST
-#     configMapKey: MYSQL_PASSWORD
+#     configMapKey: MYSQL_HOST
 
 # secret:
 #   - name: MYSQL_PASSWORD
@@ -43,21 +46,3 @@ affinity: {}
 # configmap:
 #   - name: CONFIG_NAME
 #     value: 123
-
-# secret:
-#   - name: MYSQL_PASSWORD
-#     value: 123456
-
-# configmap:
-#   - name: MYSQL_HOST
-#     value: 127.0.0.1
-#   - name: MYSQL_PORT
-#     value: 3306
-
-# env:
-#   - name: MYSQL_HOST
-#     configMapKey: MYSQL_HOST
-#   - name: MYSQL_PASSWORD
-#     secretKey: MYSQL_PASSWORD
-#   - name: REDIS_HOST
-#     value: 127.0.0.1

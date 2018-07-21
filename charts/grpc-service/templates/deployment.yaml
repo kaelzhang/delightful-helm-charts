@@ -26,28 +26,45 @@ spec:
 {{- $root := . -}}
 {{- if .Values.env }}
           env:
-{{- range $env := .Values.env }}
+  {{- range $env := .Values.env -}}
+    {{- if $env.secret }}
+            - name: {{ $env.secret }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "grpc-service.name" $root }}-secret
+                  key: {{ $env.secret }}
+    {{- else if $env.config }}
+            - name: {{ $env.config }}
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "grpc-service.name" $root }}-configmap
+                  key: {{ $env.config }}
+    {{- else }}
             - name: {{ $env.name }}
-{{- if $env.configMapKey }}
+      {{- if $env.configMapKey }}
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "grpc-service.name" $root }}-configmap
                   key: {{ $env.configMapKey }}
-{{- else if $env.secretKey }}
+      {{- else if $env.secretKey }}
               valueFrom:
                 secretKeyRef:
                   name: {{ template "grpc-service.name" $root }}-secret
                   key: {{ $env.secretKey }}
-{{- else }}
+      {{- else }}
               value: {{ $env.value }}
-{{- end -}}
-{{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
 {{- end }}
           ports:
             - name: http
-              containerPort: 80
+              containerPort: {{ .Values.container.port }}
               protocol: TCP
           livenessProbe:
+            # Kubernetes does not support gRPC health checks
+            # https://github.com/kubernetes/kubernetes/issues/21493
+            # so ues tcp for now
             tcpSocket:
               port: http
             initialDelaySeconds: 5

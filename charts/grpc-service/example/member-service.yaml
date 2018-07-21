@@ -1,0 +1,25 @@
+name: member-service
+
+image:
+  repository: ost.ai/member-service
+  tag: 1.0.0
+
+env:
+  - name: MYSQL_HOST
+    value: 127.0.0.1
+
+  - name: MYSQL_PORT
+    configMapKey: mysql_port
+
+  - secret: MYSQL_USER
+
+  - name: MYSQL_PASSWORD
+    secretKey: mysql_password
+
+secret:
+  - name: mysql_password
+    value: 123456
+
+config:
+  - name: mysql_port
+    value: 3306

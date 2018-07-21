@@ -1,4 +1,11 @@
-# Helm charts of ost.ai
+# Delightful Helm Charts
+
+Delightful and frequent-used helm charts, including:
+
+- [**grpc-service**](charts/grpc-service): gRPC-based services
+- [**ingress**](charts/ingress): The helm chart of "stand-alone" ingress with ingress-nginx-controller which means it is NOT dependent on loadbalancers of cloud providers.
+
+For details, see the README.md file of each chart.
 
 ## Usage
 
@@ -25,27 +32,3 @@ upgrade
 ```sh
 $ helm upgrade elegant-hog ./member-service
 ```
-
-## Unified Abbr Convention
-
-### Enum Suffixes
-
-- **MP**: 小程序 mini program，包括小游戏
-- **SUB**: 订阅号 subscription account
-- **SA**: 服务号 service account
-
-### Emails
-
-```mustache
-i+ost.ai-{{platform}}-{{account-type}}-{{app-desc}}@kael.me
-```
-
-For example:
-
-```
-i+ost.ai-wechat-mp-paipai@kael.me
-```
-
-wechat | mp | paipai
----- | ---- | ----
-微信 | 小程序 | 拍牌

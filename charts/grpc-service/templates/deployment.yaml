@@ -61,19 +61,34 @@ spec:
             - name: http
               containerPort: {{ .Values.container.port }}
               protocol: TCP
+{{- if .Values.livenessProbe -}}
+{{- $probe := .Values.livenessProbe }}
           livenessProbe:
-            # Kubernetes does not support gRPC health checks
-            # https://github.com/kubernetes/kubernetes/issues/21493
-            # so ues tcp for now
+{{- if $probe.http }}
+            httpGet:
+              path: {{ $probe.http.path }}
+              port: http
+{{- else if $probe.tcp }}
             tcpSocket:
               port: http
-            initialDelaySeconds: 5
-            periodSeconds: 10
+{{- end }}
+            initialDelaySeconds: {{ $probe.initialDelaySeconds | default 5 }}
+            periodSeconds: {{ $probe.periodSeconds | default 10 }}
+{{- end -}}
+{{- if .Values.readinessProbe -}}
+{{- $probe := .Values.readinessProbe }}
           readinessProbe:
+{{- if $probe.http }}
+            httpGet:
+              path: {{ $probe.http.path }}
+              port: http
+{{- else if $probe.tcp }}
             tcpSocket:
               port: http
-            initialDelaySeconds: 15
-            periodSeconds: 20
+{{- end }}
+            initialDelaySeconds: {{ $probe.initialDelaySeconds | default 15 }}
+            periodSeconds: {{ $probe.periodSeconds | default 20 }}
+{{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
     {{- with .Values.nodeSelector }}

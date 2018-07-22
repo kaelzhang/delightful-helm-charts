@@ -26,6 +26,19 @@ tolerations: []
 
 affinity: {}
 
+livenessProbe:
+  # Kubernetes does not support gRPC health checks
+  # https://github.com/kubernetes/kubernetes/issues/21493
+  # so ues tcp for now
+  tcp: true
+  initialDelaySeconds: 5
+  periodSeconds: 10
+
+readinessProbe:
+  tcp: true
+  initialDelaySeconds: 15
+  periodSeconds: 20
+
 # env:
 #   - name: SERVICE_PORT
 #     # value will output a simple value

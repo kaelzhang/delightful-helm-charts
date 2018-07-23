@@ -3,8 +3,8 @@ apiVersion: v1
 metadata:
   name: {{ template "grpc-service.name" . }}-configmap
 data:
-{{- if .Values.configmap -}}
-{{- range $config := .Values.configmap }}
+{{- if .Values.configMap -}}
+{{- range $config := .Values.configMap }}
   {{ $config.name }}: {{ $config.value }}
 {{- end -}}
 {{- end -}}

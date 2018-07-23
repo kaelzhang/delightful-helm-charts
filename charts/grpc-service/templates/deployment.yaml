@@ -24,39 +24,61 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
 {{- $root := . -}}
-{{- if .Values.env }}
+{{- if or .Values.env .Values.envFrom }}
           env:
-  {{- range $env := .Values.env -}}
-    {{- if $env.secret }}
+  {{- if .Values.envFrom -}}
+    {{- if .Values.envFrom.secret -}}
+      {{- range $secret := $root.Values.secret }}
+            - name: {{ $secret.name }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ template "grpc-service.name" $root }}-secret
+                  key: {{ $secret.name }}
+      {{- end -}}
+    {{- end -}}
+    {{- if .Values.envFrom.configMap -}}
+      {{- range $configmap := $root.Values.configMap }}
+            - name: {{ $configmap.name }}
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ template "grpc-service.name" $root }}-secret
+                  key: {{ $configmap.name }}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if .Values.env }}
+    {{- range $env := .Values.env -}}
+      {{- if $env.secret }}
             - name: {{ $env.secret }}
               valueFrom:
                 secretKeyRef:
                   name: {{ template "grpc-service.name" $root }}-secret
                   key: {{ $env.secret }}
-    {{- else if $env.config }}
+      {{- else if $env.config }}
             - name: {{ $env.config }}
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "grpc-service.name" $root }}-configmap
                   key: {{ $env.config }}
-    {{- else }}
+      {{- else }}
             - name: {{ $env.name }}
-      {{- if $env.configMapKey }}
+        {{- if $env.configMapKey }}
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "grpc-service.name" $root }}-configmap
                   key: {{ $env.configMapKey }}
-      {{- else if $env.secretKey }}
+        {{- else if $env.secretKey }}
               valueFrom:
                 secretKeyRef:
                   name: {{ template "grpc-service.name" $root }}-secret
                   key: {{ $env.secretKey }}
-      {{- else }}
+        {{- else }}
               value: {{ $env.value }}
+        {{- end -}}
       {{- end -}}
     {{- end -}}
   {{- end -}}
-{{- end }}
+{{- end}}
           ports:
             - name: http
               containerPort: {{ .Values.container.port }}

@@ -41,7 +41,7 @@ spec:
             - name: {{ $configmap.name }}
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "basic-service.name" $root }}-secret
+                  name: {{ template "basic-service.name" $root }}-configmap
                   key: {{ $configmap.name }}
       {{- end -}}
     {{- end -}}

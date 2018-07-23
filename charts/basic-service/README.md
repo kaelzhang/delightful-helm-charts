@@ -1,6 +1,6 @@
 # Usage
 
 ```sh
-$ cd charts/grpc-service
+$ cd charts/basic-service
 $ helm install --dry-run --debug --values ./example/member-service.yaml .
 ```

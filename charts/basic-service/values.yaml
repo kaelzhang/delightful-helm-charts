@@ -1,14 +1,14 @@
-# Default values for grpc-service.
+# Default values for basic-service.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 # The service name, should be overridden by user
-# name: grpc-service
+# name: basic-service
 
 replicaCount: 1
 
 image:
-  # repository: ost.ai/grpc-service
+  # repository: ost.ai/basic-service
   # tag: 1.2.1
 
   pullPolicy: IfNotPresent

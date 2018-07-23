@@ -1,22 +1,22 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: {{ template "grpc-service.fullname" . }}
+  name: {{ template "basic-service.fullname" . }}
   labels:
-    app: {{ template "grpc-service.name" . }}
-    chart: {{ template "grpc-service.chart" . }}
+    app: {{ template "basic-service.name" . }}
+    chart: {{ template "basic-service.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ template "grpc-service.name" . }}
+      app: {{ template "basic-service.name" . }}
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "grpc-service.name" . }}
+        app: {{ template "basic-service.name" . }}
         release: {{ .Release.Name }}
     spec:
       containers:
@@ -32,7 +32,7 @@ spec:
             - name: {{ $secret.name }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "grpc-service.name" $root }}-secret
+                  name: {{ template "basic-service.name" $root }}-secret
                   key: {{ $secret.name }}
       {{- end -}}
     {{- end -}}
@@ -41,7 +41,7 @@ spec:
             - name: {{ $configmap.name }}
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "grpc-service.name" $root }}-secret
+                  name: {{ template "basic-service.name" $root }}-secret
                   key: {{ $configmap.name }}
       {{- end -}}
     {{- end -}}
@@ -52,25 +52,25 @@ spec:
             - name: {{ $env.secret }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "grpc-service.name" $root }}-secret
+                  name: {{ template "basic-service.name" $root }}-secret
                   key: {{ $env.secret }}
       {{- else if $env.config }}
             - name: {{ $env.config }}
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "grpc-service.name" $root }}-configmap
+                  name: {{ template "basic-service.name" $root }}-configmap
                   key: {{ $env.config }}
       {{- else }}
             - name: {{ $env.name }}
         {{- if $env.configMapKey }}
               valueFrom:
                 configMapKeyRef:
-                  name: {{ template "grpc-service.name" $root }}-configmap
+                  name: {{ template "basic-service.name" $root }}-configmap
                   key: {{ $env.configMapKey }}
         {{- else if $env.secretKey }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ template "grpc-service.name" $root }}-secret
+                  name: {{ template "basic-service.name" $root }}-secret
                   key: {{ $env.secretKey }}
         {{- else }}
               value: {{ $env.value }}

@@ -3,10 +3,10 @@ kind: Service
 metadata:
   # Do not use fullname,
   # so that the service could be accessed by using kube-dns
-  name: {{ template "grpc-service.name" . }}
+  name: {{ template "basic-service.name" . }}
   labels:
-    app: {{ template "grpc-service.name" . }}
-    chart: {{ template "grpc-service.chart" . }}
+    app: {{ template "basic-service.name" . }}
+    chart: {{ template "basic-service.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
@@ -17,5 +17,5 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app: {{ template "grpc-service.name" . }}
+    app: {{ template "basic-service.name" . }}
     release: {{ .Release.Name }}

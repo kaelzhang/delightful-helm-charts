@@ -1,14 +1,14 @@
 {{- if .Values.ingress.enabled -}}
-{{- $fullName := include "ingress.fullname" . -}}
+{{- $name := include "basic-service.name" . -}}
 {{- $servicePort := .Values.service.port -}}
 {{- $ingressPath := .Values.ingress.path -}}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: {{ $fullName }}
+  name: {{ $name }}
   labels:
-    app: {{ template "ingress.name" . }}
-    chart: {{ template "ingress.chart" . }}
+    app: {{ template "basic-service.name" . }}
+    chart: {{ template "basic-service.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 {{- with .Values.ingress.annotations }}
@@ -33,7 +33,7 @@ spec:
         paths:
           - path: {{ $ingressPath }}
             backend:
-              serviceName: {{ $fullName }}
+              serviceName: {{ $name }}
               servicePort: http
   {{- end }}
 {{- end }}

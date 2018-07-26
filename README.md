@@ -3,7 +3,7 @@
 Delightful and frequent-used helm charts, including:
 
 - [**basic-service**](charts/basic-service): A basic helm chart for services based on HTTP/TCP.
-- [**ingress**](charts/ingress): The helm chart of "stand-alone" ingress with ingress-nginx-controller which means it is NOT dependent on loadbalancers of cloud providers.
+- [**ingress**](charts/ingress): The helm chart of "stand-alone" ingress with ingress-nginx-controller which means it is **NOT** dependent on loadbalancers of cloud providers.
 
 For details, see the README.md file of each chart.
 

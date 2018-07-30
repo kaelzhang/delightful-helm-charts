@@ -53,15 +53,23 @@ readinessProbe:
   initialDelaySeconds: 15
   periodSeconds: 20
 
+# Usage
+#######################################################
 # env:
 #   - name: SERVICE_PORT
 #     # value will output a simple value
 #     value: "80"
+
 #   - name: MYSQL_PASSWORD
 #     # will reference the env value to the specific secret key
 #     secretKey: MYSQL_PASSWORD
+#     # The above is equivalent to:
+#   - secret: MYSQL_PASSWORD
+
 #   - name: MYSQL_HOST
 #     configMapKey: MYSQL_HOST
+#     # The above is equivalent to:
+#   - config: MYSQL_HOST
 
 # secret:
 #   - name: MYSQL_PASSWORD

@@ -1,0 +1,29 @@
+{{- if .Values.services -}}
+  {{- range $i, $service := .Values.services -}}
+    {{- if gt $i 0 }}
+
+---
+    {{- end }}
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ $service.name }}
+spec:
+  ports:
+  - protocol: {{ $service.protocol | default "TCP" }}
+    port: 80
+    targetPort: 9376
+
+---
+
+kind: Endpoints
+apiVersion: v1
+metadata:
+  name: {{ $service.name }}
+subsets:
+  - addresses:
+      - ip: {{ $service.ip }}
+    ports:
+      - port: {{ $service.port }}
+  {{- end -}}
+{{- end -}}

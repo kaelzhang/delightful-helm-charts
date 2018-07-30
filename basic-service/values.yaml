@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 # The service name, should be overridden by user
-# name: basic-service
+name: basic-service
 
 replicaCount: 1
 

@@ -11,8 +11,8 @@ metadata:
 spec:
   ports:
   - protocol: {{ $service.protocol | default "TCP" }}
-    port: 80
-    targetPort: 9376
+    port: {{ $service.port }}
+    targetPort: {{ $service.port }}
 
 ---
 

@@ -63,6 +63,7 @@ readinessProbe:
 #   - name: MYSQL_PASSWORD
 #     # will reference the env value to the specific secret key
 #     secretKey: MYSQL_PASSWORD
+
 #     # The above is equivalent to:
 #   - secret: MYSQL_PASSWORD
 
@@ -71,9 +72,18 @@ readinessProbe:
 #     # The above is equivalent to:
 #   - config: MYSQL_HOST
 
+# envFrom:
+#     # import all secrets to env
+#   - secret: true
+
+#     # import all configMap members to env
+#   - configMap: true
+
 # secret:
 #   - name: MYSQL_PASSWORD
 #     value: 123456
+
+#     # TODO
 #   - name: WECHAT_PAY_CERT
 #     # this will load secret from file
 #     fromFile: /var/run/secrets/ost.ai/wechat_pay.p12

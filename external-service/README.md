@@ -1,8 +1,10 @@
 # Usage
 
 ```sh
-$ cd charts/basic-service
-$ helm install --dry-run --debug --values ./example/member-service.yaml .
+cd external-service/example
+
+# dry run
+bash ./external-services.sh
 ```
 
 ## References

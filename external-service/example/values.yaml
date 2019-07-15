@@ -1,0 +1,9 @@
+services:
+  - name: redis-service
+    ip: 127.0.0.1
+    port: 6380
+    targetPort: 6379
+    # default value
+    protocol: TCP
+  - name: mysql-service
+    externalName: mysql.com

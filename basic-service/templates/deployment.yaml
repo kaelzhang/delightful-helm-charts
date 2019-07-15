@@ -78,7 +78,7 @@ spec:
       {{- end -}}
     {{- end -}}
   {{- end -}}
-{{- end}}
+{{- end }}
           ports:
             - name: http
               containerPort: {{ .Values.container.port }}

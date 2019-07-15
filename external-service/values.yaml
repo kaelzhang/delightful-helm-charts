@@ -1,4 +1,4 @@
-# Default values for basic-service.
+# Default values for external-service.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -8,7 +8,8 @@
 #     ip: 10.21.50.121
 #     port: 3306
 #     # targetPort: 47980
-#     # default value
+#     # Default value
 #     protocol: TCP
+
 #   - name: redis-service
 #     externalName: redis1.mlab.com

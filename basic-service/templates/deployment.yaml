@@ -1,3 +1,4 @@
+{{- $root := . -}}
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
@@ -19,11 +20,16 @@ spec:
         app: {{ template "basic-service.name" . }}
         release: {{ .Release.Name }}
     spec:
+{{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+  {{- range $pullSecret := $root.Values.imagePullSecrets }}
+        - name: {{ $pullSecret }}
+  {{- end -}}
+{{- end }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-{{- $root := . -}}
 {{- if or .Values.env .Values.envFrom }}
           env:
   {{- if .Values.envFrom -}}

@@ -1,8 +1,9 @@
 {{- $root := . -}}
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "basic-service.fullname" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     app: {{ template "basic-service.name" . }}
     chart: {{ template "basic-service.chart" . }}

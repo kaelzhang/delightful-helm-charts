@@ -37,8 +37,8 @@ spec:
             backend:
               serviceName: {{ $name }}
               servicePort: http
-      {{- else -}}
-        {{- range $ingressPaths }}
+    {{- else -}}
+      {{- range $ingressPaths }}
           - path: {{ . }}
             backend:
               serviceName: {{ $name }}

@@ -55,6 +55,7 @@ readinessProbe:
 
 # Env Usage
 #######################################################
+env: []
 # env:
 #   - name: SERVICE_PORT
 #     # value will output a simple value

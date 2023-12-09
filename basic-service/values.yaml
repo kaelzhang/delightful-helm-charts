@@ -53,7 +53,7 @@ readinessProbe:
   initialDelaySeconds: 15
   periodSeconds: 20
 
-# Usage
+# Env Usage
 #######################################################
 # env:
 #   - name: SERVICE_PORT
@@ -91,3 +91,18 @@ readinessProbe:
 # configmap:
 #   - name: CONFIG_NAME
 #     value: 123
+
+# Persistent Volume Usage
+#######################################################
+persistence:
+  enabled: false
+  volumes: []
+#   volumes:
+#       # name suffix of the volume, optional
+#     - nameSuffix: data
+#       # the path of the volume in the local machine, currently only support hostPath
+#       hostPath: /var/data
+#       # the path of the volume in the container
+#       mountPath: /data
+#       # the size of the volume, optional, defaults to 1Gi
+#       storage: 1Gi

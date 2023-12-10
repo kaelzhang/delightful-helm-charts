@@ -55,7 +55,6 @@ readinessProbe:
 
 # Env Usage
 #######################################################
-env: []
 # env:
 #   - name: SERVICE_PORT
 #     # value will output a simple value
@@ -80,6 +79,8 @@ env: []
 #     # import all configMap members to env
 #   - configMap: true
 
+# Secret Usage
+#######################################################
 # secret:
 #   - name: MYSQL_PASSWORD
 #     value: 123456
@@ -89,6 +90,8 @@ env: []
 #     # this will load secret from file
 #     fromFile: /var/run/secrets/ost.ai/wechat_pay.p12
 
+# ConfigMap Usage
+#######################################################
 # configmap:
 #   - name: CONFIG_NAME
 #     value: 123

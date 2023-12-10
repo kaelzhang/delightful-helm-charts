@@ -61,33 +61,35 @@ spec:
       {{- end -}}
     {{- end -}}
   {{- end -}}
-  {{- range $env := .Values.env }}
-    {{- if $env.secret }}
+  {{- if .Values.env }}
+    {{- range $env := .Values.env -}}
+      {{- if $env.secret }}
             - name: {{ $env.secret }}
               valueFrom:
                 secretKeyRef:
                   name: {{ template "basic-service.name" $root }}-secret
                   key: {{ $env.secret }}
-    {{- else if $env.config }}
+      {{- else if $env.config }}
             - name: {{ $env.config }}
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "basic-service.name" $root }}-configmap
                   key: {{ $env.config }}
-    {{- else }}
+      {{- else }}
             - name: {{ $env.name }}
-      {{- if $env.configMapKey }}
+        {{- if $env.configMapKey }}
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "basic-service.name" $root }}-configmap
                   key: {{ $env.configMapKey }}
-      {{- else if $env.secretKey }}
+        {{- else if $env.secretKey }}
               valueFrom:
                 secretKeyRef:
                   name: {{ template "basic-service.name" $root }}-secret
                   key: {{ $env.secretKey }}
-      {{- else }}
+        {{- else }}
               value: {{ $env.value }}
+        {{- end -}}
       {{- end -}}
     {{- end -}}
   {{- end -}}

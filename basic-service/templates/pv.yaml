@@ -1,6 +1,6 @@
 {{- if .Values.persistence.enabled -}}
   {{- range $index, $volume := .Values.persistence.volumes -}}
-    {{- if $index > 0 -}}
+    {{- if gt $index 0 -}}
 ---
     {{- end -}}
 kind: PersistentVolume

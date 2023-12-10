@@ -29,10 +29,10 @@ spec:
 {{- end }}
 {{- if .Values.persistence.enabled }}
       volumes:
-  {{- range $index, $volume := .Values.persistence.volumes -}}
-        - name: {{ template "basic-service.name" . }}-vol-{{ $volume.nameSuffix | default $index }}
+  {{- range $index, $volume := .Values.persistence.volumes }}
+        - name: {{ template "basic-service.name" $root }}-vol-{{ $volume.nameSuffix | default $index }}
           persistentVolumeClaim:
-            claimName: {{ template "basic-service.name" }}-pvc-{{ $volume.nameSuffix | default $index }}
+            claimName: {{ template "basic-service.name" $root }}-pvc-{{ $volume.nameSuffix | default $index }}
   {{- end -}}
 {{- end }}
       containers:
@@ -95,8 +95,8 @@ spec:
   {{- end -}}
   {{- if .Values.persistence.enabled }}
           volumeMounts:
-    {{- range $index, $volume := .Values.persistence.volumes -}}
-            - name: {{ template "basic-service.fullname" . }}-vol-{{ $volume.nameSuffix | default $index }}
+    {{- range $index, $volume := .Values.persistence.volumes }}
+            - name: {{ template "basic-service.name" $root }}-vol-{{ $volume.nameSuffix | default $index }}
               mountPath: {{ $volume.mountPath }}
     {{- end -}}
   {{- end -}}

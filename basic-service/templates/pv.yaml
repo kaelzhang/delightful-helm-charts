@@ -1,4 +1,5 @@
 {{- if .Values.persistence.enabled -}}
+  {{- $root := . -}}
   {{- range $index, $volume := .Values.persistence.volumes -}}
     {{- if gt $index 0 -}}
 ---
@@ -6,7 +7,7 @@
 kind: PersistentVolume
 apiVersion: v1
 metadata:
-  name: {{ template "basic-service.name" }}-pv-{{ $volume.nameSuffix | default $index }}
+  name: {{ template "basic-service.name" $root }}-pv-{{ $volume.nameSuffix | default $index }}
 spec:
   capacity:
     storage: {{ $volume.storage | default "1Gi" }}
@@ -19,7 +20,7 @@ spec:
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: {{ template "basic-service.name" }}-pvc-{{ $volume.nameSuffix | default $index }}
+  name: {{ template "basic-service.name" $root }}-pvc-{{ $volume.nameSuffix | default $index }}
 spec:
   accessModes:
     - ReadWriteMany

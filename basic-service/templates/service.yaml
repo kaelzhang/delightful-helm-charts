@@ -12,10 +12,13 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
-      protocol: TCP
-      name: http
+{{- $ports := required "Values.ports is required and must be a list" .Values.ports -}}
+{{- range $index, $port := $ports }}
+    - name: {{ required (printf "each Values.ports[%d].name is required" $index) $port.name }}
+      port: {{ required (printf "each Values.ports[%d].port is required" $index) $port.port }}
+      targetPort: {{ default $port.port $port.targetPort }}
+      protocol: {{ default "TCP" $port.protocol }}
+{{- end -}}
   selector:
     app: {{ template "basic-service.name" . }}
     release: {{ .Release.Name }}

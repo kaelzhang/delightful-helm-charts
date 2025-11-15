@@ -17,15 +17,17 @@ fi
 
 # Test 1: Lint the chart
 echo "1. Running helm lint..."
-helm lint "$CHART_DIR" || {
+helm lint "$CHART_DIR" --debug || {
     echo "Error: helm lint failed"
     exit 1
 }
 
+mkdir -p "$SCRIPT_DIR/output"
+
 # Test 2: Template with test values (since default values may have missing required fields)
 TEST_VALUES="$SCRIPT_DIR/test-values-basic-service.yaml"
 echo "2. Running helm template with test values..."
-helm template test-release "$CHART_DIR" -f "$TEST_VALUES" > /dev/null || {
+helm template test-release "$CHART_DIR" -f "$TEST_VALUES" --debug --output-dir "$SCRIPT_DIR/output" > /dev/null || {
     echo "Error: helm template with test values failed"
     exit 1
 }
@@ -33,7 +35,8 @@ helm template test-release "$CHART_DIR" -f "$TEST_VALUES" > /dev/null || {
 # Test 3: Template with example values
 if [ -f "$EXAMPLE_VALUES" ]; then
     echo "3. Running helm template with example values..."
-    helm template test-release "$CHART_DIR" -f "$EXAMPLE_VALUES" > /dev/null || {
+    echo "helm template test-release $CHART_DIR -f $EXAMPLE_VALUES --debug --output-dir $SCRIPT_DIR/output"
+    helm template test-release "$CHART_DIR" -f "$EXAMPLE_VALUES" --debug --output-dir "$SCRIPT_DIR/output" > /dev/null || {
         echo "Error: helm template with example values failed"
         exit 1
     }

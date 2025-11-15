@@ -25,7 +25,7 @@ spec:
       imagePullSecrets:
   {{- range $pullSecret := $root.Values.imagePullSecrets }}
         - name: {{ $pullSecret }}
-  {{- end -}}
+  {{- end }}
 {{- end }}
 {{- if .Values.persistence.enabled }}
       volumes:
@@ -33,7 +33,7 @@ spec:
         - name: {{ template "basic-service.name" $root }}-vol-{{ $volume.nameSuffix | default $index }}
           persistentVolumeClaim:
             claimName: {{ template "basic-service.name" $root }}-pvc-{{ $volume.nameSuffix | default $index }}
-  {{- end -}}
+  {{- end }}
 {{- end }}
       containers:
         - name: {{ .Chart.Name }}
@@ -41,28 +41,28 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
 {{- if or .Values.env .Values.envFrom }}
           env:
-  {{- if .Values.envFrom -}}
-    {{- if .Values.envFrom.secret -}}
+  {{- if .Values.envFrom }}
+    {{- if .Values.envFrom.secret }}
       {{- range $secret := $root.Values.secret }}
             - name: {{ $secret.name }}
               valueFrom:
                 secretKeyRef:
                   name: {{ template "basic-service.name" $root }}-secret
                   key: {{ $secret.name }}
-      {{- end -}}
-    {{- end -}}
-    {{- if .Values.envFrom.configMap -}}
+      {{- end }}
+    {{- end }}
+    {{- if .Values.envFrom.configMap }}
       {{- range $configmap := $root.Values.configMap }}
             - name: {{ $configmap.name }}
               valueFrom:
                 configMapKeyRef:
                   name: {{ template "basic-service.name" $root }}-configmap
                   key: {{ $configmap.name }}
-      {{- end -}}
-    {{- end -}}
-  {{- end -}}
+      {{- end }}
+    {{- end }}
+  {{- end }}
   {{- if .Values.env }}
-    {{- range $env := .Values.env -}}
+    {{- range $env := .Values.env }}
       {{- if $env.secret }}
             - name: {{ $env.secret }}
               valueFrom:
@@ -89,52 +89,67 @@ spec:
                   key: {{ $env.secretKey }}
         {{- else }}
               value: {{ $env.value }}
-        {{- end -}}
-      {{- end -}}
-    {{- end -}}
-  {{- end -}}
+        {{- end }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
   {{- if .Values.persistence.enabled }}
           volumeMounts:
     {{- range $index, $volume := .Values.persistence.volumes }}
             - name: {{ template "basic-service.name" $root }}-vol-{{ $volume.nameSuffix | default $index }}
               mountPath: {{ $volume.mountPath }}
-    {{- end -}}
-  {{- end -}}
+    {{- end }}
+  {{- end }}
 {{- end }}
           ports:
-{{- $ports := required "Values.ports is required and must be a list" .Values.ports -}}
+{{- $ports := required "Values.ports is required and must be a list" .Values.ports }}
+{{- $firstTCPPort := dict "name" "" }}
 {{- range $index, $port := $ports }}
+  {{- $protocol := default "TCP" $port.protocol }}
+  {{- if and (eq $protocol "TCP") (empty $firstTCPPort.name) }}
+      {{- $_ := set $firstTCPPort "name" $port.name }}
+  {{- end }}
             - name: {{ required (printf "each Values.ports[%d].name is required" $index) $port.name }}
-  {{- $either := coalesce $port.port $port.targetPort -}}
-  {{- required (printf "either Values.ports[%d].port or Values.ports[%d].targetPort is required" $index) $either }}
+  {{- $either := coalesce $port.port $port.targetPort }}
+  {{- if empty $either }}
+    {{- fail (printf "either Values.ports[%d].port or Values.ports[%d].targetPort is required" $index) }}
+  {{- end }}
               containerPort: {{ default $port.port $port.targetPort }}
-              protocol: {{ default "TCP" $port.protocol }}
-{{- end -}}
-{{- if .Values.livenessProbe -}}
-{{- $probe := .Values.livenessProbe }}
+              protocol: {{ $protocol }}
+{{- end }}
+{{- if .Values.livenessProbe }}
+  {{- $probe := .Values.livenessProbe }}
+  {{- $probePortName := default $firstTCPPort.name $probe.port -}}
+  {{- if empty $probePortName }}
+    {{- fail "either livenessProbe.port or an available TCP port in Values.ports is required" }}
+  {{- end }}
           livenessProbe:
-{{- if $probe.http }}
+  {{- if $probe.http }}
             httpGet:
               path: {{ $probe.http.path }}
-              port: http
-{{- else if $probe.tcp }}
+              port: {{ $probePortName }}
+  {{- else if $probe.tcp }}
             tcpSocket:
-              port: http
-{{- end }}
+              port: {{ $probePortName }}
+  {{- end }}
             initialDelaySeconds: {{ $probe.initialDelaySeconds | default 5 }}
             periodSeconds: {{ $probe.periodSeconds | default 10 }}
-{{- end -}}
-{{- if .Values.readinessProbe -}}
-{{- $probe := .Values.readinessProbe }}
+{{- end }}
+{{- if .Values.readinessProbe }}
+  {{- $probe := .Values.readinessProbe }}
+  {{- $probePortName := default $firstTCPPort.name $probe.port }}
+  {{- if empty $probePortName }}
+    {{- fail "either readinessProbe.port or an available TCP port in Values.ports is required" }}
+  {{- end }}
           readinessProbe:
-{{- if $probe.http }}
+  {{- if $probe.http }}
             httpGet:
               path: {{ $probe.http.path }}
-              port: http
-{{- else if $probe.tcp }}
+              port: {{ $probePortName }}
+  {{- else if $probe.tcp }}
             tcpSocket:
-              port: http
-{{- end }}
+              port: {{ $probePortName }}
+  {{- end }}
             initialDelaySeconds: {{ $probe.initialDelaySeconds | default 15 }}
             periodSeconds: {{ $probe.periodSeconds | default 20 }}
 {{- end }}

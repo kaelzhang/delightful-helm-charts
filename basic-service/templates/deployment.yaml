@@ -105,7 +105,7 @@ spec:
 {{- $ports := required "Values.ports is required and must be a list" .Values.ports -}}
 {{- range $index, $port := $ports }}
             - name: {{ required (printf "each Values.ports[%d].name is required" $index) $port.name }}
-  {{- $either := coalesce $p.port $p.targetPort -}}
+  {{- $either := coalesce $port.port $port.targetPort -}}
   {{- required (printf "either Values.ports[%d].port or Values.ports[%d].targetPort is required" $index) $either }}
               containerPort: {{ default $port.port $port.targetPort }}
               protocol: {{ default "TCP" $port.protocol }}

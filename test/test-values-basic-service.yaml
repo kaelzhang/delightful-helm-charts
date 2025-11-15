@@ -1,0 +1,9 @@
+# Minimal test values for basic-service chart
+image:
+  repository: test-image
+  tag: test-tag
+
+ports:
+  - name: http
+    port: 80
+

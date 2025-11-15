@@ -1,0 +1,7 @@
+# Minimal test values for external-service chart
+services:
+  - name: test-service
+    ip: 127.0.0.1
+    port: 8080
+    protocol: TCP
+

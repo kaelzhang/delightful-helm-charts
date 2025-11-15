@@ -3,8 +3,8 @@ apiVersion: v1
 metadata:
   name: {{ template "basic-service.name" . }}-configmap
 data:
-{{- if .Values.configMap -}}
+{{- if .Values.configMap }}
 {{- range $config := .Values.configMap }}
   {{ $config.name }}: {{ $config.value | quote }}
-{{- end -}}
+{{- end }}
 {{- end -}}

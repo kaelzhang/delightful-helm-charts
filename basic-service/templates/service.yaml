@@ -12,7 +12,7 @@ metadata:
 spec:
   type: {{ .Values.service.type }}
   ports:
-{{- $ports := required "Values.ports is required and must be a list" .Values.ports -}}
+{{- $ports := required "Values.ports is required and must be a list" .Values.ports }}
 {{- range $index, $port := $ports }}
     - name: {{ required (printf "each Values.ports[%d].name is required" $index) $port.name }}
       port: {{ required (printf "each Values.ports[%d].port is required" $index) $port.port }}
